@@ -1,19 +1,23 @@
-from discord.ext import commands
-import os
-import traceback
+#coding:UTF-8
+import discord
+from discord.ext import tasks
+from datetime import datetime 
 
-bot = commands.Bot(command_prefix='/')
-token = os.environ['DISCORD_BOT_TOKEN']
+TOKEN = "NjE4MTEyNTI2NjI1OTMxMjcz.XW09JA.y2IJRVkpoQmnrQNIT0D7JCxuYec" #トークン
+CHANNEL_ID =299037452373458944 #チャンネルID
+# 接続に必要なオブジェクトを生成
+client = discord.Client()
 
+# 60秒に一回ループ
+@tasks.loop(seconds=60)
+async def loop():
+    # 現在の時刻
+    now = datetime.now().strftime('%H:%M')
+    if now == '01:30':
+        channel = client.get_channel(CHANNEL_ID)
+        await channel.send('おはよう')  
 
-@bot.event
-async def on_command_error(ctx, error):
-    await ctx.send(str(error))
-
-
-@bot.command()
-async def ping(ctx):
-    await ctx.send('pong')
-
-
-bot.run(token)
+#ループ処理実行
+loop.start()
+# Botの起動とDiscordサーバーへの接続
+client.run(TOKEN)
